@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import OpenAI from "openai";
 import { getFirestore } from "firebase-admin/firestore";
-import "@/lib/firebase-admin-init"; // adminSDK初期化
+import "@/lib/firebase-admin-init";
 
 const db = getFirestore();
 const openai = new OpenAI();
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
     }
 
     // 🤖 OpenAIプロンプト
- const prompt = `
+    const prompt = `
 あなたはSNSマーケティングの専門家です。
 以下の情報をもとに、${sns}の1ヶ月でフォロワーを${target}人まで増加させるための逆算戦略を提案してください。
 
@@ -99,7 +99,8 @@ export async function POST(req: NextRequest) {
   }
 }
 説明文は不要。このJSONのみを返してください。
-`.trim();
+    `.trim();
+
     const aiRes = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [{ role: "user", content: prompt }],
@@ -110,6 +111,7 @@ export async function POST(req: NextRequest) {
     console.log("AI raw response:", aiRes.choices[0].message.content);
 
     // 🔥 JSONパース
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let aiData: any = {};
     try {
       const cleaned = aiRes.choices[0].message.content
