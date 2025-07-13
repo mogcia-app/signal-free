@@ -1,6 +1,21 @@
 "use client";
 import { useState } from "react";
 
+// ⭐ 型定義
+type DiagnosisResult = {
+  strategy: {
+    title: string;
+    content: string;
+    note: string;
+  };
+  journeyMap: {
+    [key: string]: {
+      目的: string;
+      施策: string;
+    };
+  };
+};
+
 export default function Home() {
   const [sns, setSns] = useState("");
   const [currentFollowers, setCurrentFollowers] = useState("");
@@ -12,7 +27,7 @@ export default function Home() {
   const [email, setEmail] = useState("");
   const [accountName, setAccountName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any>(null);
+  const [result, setResult] = useState<DiagnosisResult | null>(null); // ⭐ 型つき
 
   const handleDiagnosis = async () => {
     if (!email) {
@@ -93,7 +108,7 @@ export default function Home() {
 
       {/* ====== 無料診断フォーム ====== */}
       <main id="diagnosis" className="py-12 px-4">
-     <div className="bg-white shadow-lg rounded-xl p-8 w-full">
+        <div className="bg-white shadow-lg rounded-xl p-8 w-full">
           <h2 className="text-3xl font-bold mb-6 text-center">無料SNS診断ツール</h2>
           <div className="mb-8 p-4 bg-gray-50 border-l-4 border-[#ff8a15] text-gray-700 text-sm rounded">
             💡 より精度の高い提案を受けるコツ：
@@ -172,12 +187,12 @@ export default function Home() {
             <>
               <div className="mt-10 p-6 border rounded bg-gray-50 space-y-4">
                 <h2 className="text-xl font-semibold mb-4">診断結果</h2>
-                <div><strong>戦略:</strong> {result.strategy?.title}</div>
-                <div dangerouslySetInnerHTML={{ __html: toHtmlList(result.strategy?.content) }} />
+                <div><strong>戦略:</strong> {result.strategy.title}</div>
+                <div dangerouslySetInnerHTML={{ __html: toHtmlList(result.strategy.content) }} />
                 <div>
                   <strong>カスタマージャーニー:</strong>
                   <ul className="list-disc ml-6">
-                    {Object.entries(result.journeyMap || {}).map(([stage, info]: any) => (
+                    {Object.entries(result.journeyMap).map(([stage, info]) => (
                       <li key={stage}>
                         <strong>{stage}:</strong> {info.目的}
                         <p className="ml-5">- {info.施策}</p>
