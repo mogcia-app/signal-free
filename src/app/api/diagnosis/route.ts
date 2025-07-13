@@ -94,7 +94,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ success: true, data: aiData });
 
-  } catch (err) {
-    return NextResponse.json({ success: false, error: "診断に失敗しました" }, { status: 500 });
-  }
+  } catch {
+  console.error("診断API全体エラー");
+  return NextResponse.json({ success: false, error: "診断に失敗しました" }, { status: 500 });
+}
+
 }
